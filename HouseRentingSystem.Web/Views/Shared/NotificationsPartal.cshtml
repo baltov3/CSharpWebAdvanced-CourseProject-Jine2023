@@ -1,0 +1,25 @@
+﻿@using static HouseRentingSystem.Coomon.NotificationsMessagesConstants;
+
+@if(TempData.ContainsKey(ErrorMessage))
+{
+    <script>toastr.error('@TempData[ErrorMessage]'); </script>
+}
+
+@if (TempData.ContainsKey(WarningMessage))
+{
+
+    <script>toastr.warning('@TempData[WarningMessage]');</script>
+}
+
+@if (TempData.ContainsKey(InformasionMessage))
+{
+
+    <script> toastr.info('@TempData[InformasionMessage]');</script>
+}
+
+@if (TempData.ContainsKey(SuccessMessage))
+{
+    <script>toastr.success('@TempData[SuccessMessage]');</script>
+    
+}
+
