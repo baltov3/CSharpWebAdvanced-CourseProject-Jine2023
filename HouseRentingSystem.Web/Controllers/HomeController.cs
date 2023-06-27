@@ -10,7 +10,7 @@
     public class HomeController : Controller
     {
         private readonly IHouseService houseService;
-
+        
         public HomeController(IHouseService houseService)
         {
             this.houseService = houseService;

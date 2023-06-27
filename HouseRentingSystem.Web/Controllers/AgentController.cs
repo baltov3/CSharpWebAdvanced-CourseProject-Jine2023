@@ -24,28 +24,30 @@ namespace HouseRentingSystem.Web.Controllers
             if (isAgent) 
             {
                 TempData[ErrorMessage] = "You are already an agent";
-                this.RedirectToAction("Idex", "Home");
+             return   RedirectToAction(nameof(HomeController.Index), "Home");
             }
             return View();
             
         }
-        public async Task<IActionResult> Create(BecomeAgentFormModel model)
+        [HttpPost]
+        public async Task<IActionResult> Become(BecomeAgentFormModel model)
         {
             string userid = this.User.GetId();
             bool isAgent = await this.agentService.AgentexistByUserId(userid);
             if (isAgent)
             {
                 TempData[ErrorMessage] = "You are already an agent";
-               return this.RedirectToAction("Idex", "Home");
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+
             }
             bool isPhoneNumberTaken = await this.agentService.UserWithPhoneNumberExists(model.PhoneNumber);
             if (isPhoneNumberTaken)
             {
                 ModelState.AddModelError(nameof(model.PhoneNumber),"Agent with providen phonenumber already exist!");
             }
-            if (this.ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                return this.View(model);
+                return RedirectToAction(nameof(HomeController.Index), "Home");
             }
             bool activeRents = await this.agentService.UserHasRents(userid);
             if (activeRents)
@@ -63,9 +65,9 @@ namespace HouseRentingSystem.Web.Controllers
             {
 
                 this.TempData[ErrorMessage] = "Unexepected error occured while registering you as agent!";
-                return this.RedirectToAction("Idex", "Home");
+                return RedirectToAction(nameof(HomeController.Index), "Home");
             }
-            return this.RedirectToAction("All", "House");
+            return this.RedirectToAction(nameof(HouseController.All), "House");
         }
 
     }
