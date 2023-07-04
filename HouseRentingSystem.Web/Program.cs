@@ -9,6 +9,8 @@ namespace HouseRentingSystem.Web
     using HouseRentingSystem.Web.Infrastructure.Extensions;
     using HouseRenting.Services.Data;
     using HouseRenting.Services.Data.Interfaces;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+    using HouseRentingSystem.Web.Infrastructure.ModelBinders;
 
     public class Program
     {
@@ -36,6 +38,7 @@ namespace HouseRentingSystem.Web
             builder.Services.AddApplicationServices(typeof(IHouseService));
 
             builder.Services.AddControllersWithViews();
+              
 
          
 

@@ -19,9 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HouseRentingSystem.Web.View
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{633B1025-465A-4509-91CE-8852C1748A64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HouseRenting.Services.Data", "HouseRenting.Services.Data\HouseRenting.Services.Data.csproj", "{E5F526F4-DD2C-46B2-8C48-178F62D140BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HouseRenting.Services.Data", "HouseRenting.Services.Data\HouseRenting.Services.Data.csproj", "{E5F526F4-DD2C-46B2-8C48-178F62D140BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HouseRentingSystem.Web.Infrastructure", "HouseRentingSysrem.Web.Infrastructure\HouseRentingSystem.Web.Infrastructure.csproj", "{94DE2AF9-CD1A-47A8-B371-C541B980CADD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HouseRentingSystem.Web.Infrastructure", "HouseRentingSysrem.Web.Infrastructure\HouseRentingSystem.Web.Infrastructure.csproj", "{94DE2AF9-CD1A-47A8-B371-C541B980CADD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HouseRentingSystem.Services.Data.Models", "HouseRentingSystem.Services.Data.Models\HouseRentingSystem.Services.Data.Models.csproj", "{5D4D5A49-6756-4A66-A1B0-C27C974B098F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{94DE2AF9-CD1A-47A8-B371-C541B980CADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94DE2AF9-CD1A-47A8-B371-C541B980CADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94DE2AF9-CD1A-47A8-B371-C541B980CADD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D4D5A49-6756-4A66-A1B0-C27C974B098F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D4D5A49-6756-4A66-A1B0-C27C974B098F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D4D5A49-6756-4A66-A1B0-C27C974B098F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D4D5A49-6756-4A66-A1B0-C27C974B098F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +74,7 @@ Global
 		{4664E00B-01D9-48B8-A1BA-DA834433DBD1} = {4310D4E1-6455-4B7C-A27D-015938B0F72C}
 		{E5F526F4-DD2C-46B2-8C48-178F62D140BB} = {633B1025-465A-4509-91CE-8852C1748A64}
 		{94DE2AF9-CD1A-47A8-B371-C541B980CADD} = {4310D4E1-6455-4B7C-A27D-015938B0F72C}
+		{5D4D5A49-6756-4A66-A1B0-C27C974B098F} = {633B1025-465A-4509-91CE-8852C1748A64}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6DEBF55-4A2F-4544-B13C-FA6A5C1927D4}

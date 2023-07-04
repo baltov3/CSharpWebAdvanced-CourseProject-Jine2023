@@ -39,6 +39,17 @@ namespace HouseRenting.Services.Data
            await this.dbContext.SaveChangesAsync();
         }
 
+        public async Task<string?> GetAgentIdByuserIdAsync(string userId)
+        {
+            Agent? agent = await this.dbContext.Agents.FirstOrDefaultAsync(a=>a.UserId.ToString()==userId);
+            if (agent==null)
+            {
+                return null;
+
+            }
+            return agent.Id.ToString();
+        }
+
         public async Task<bool> UserHasRents(string userId)
         {
            ApplicationUser? user = await this.dbContext.Users.FirstOrDefaultAsync(u=>u.Id.ToString()==userId);

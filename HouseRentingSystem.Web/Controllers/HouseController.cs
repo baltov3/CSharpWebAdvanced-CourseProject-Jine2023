@@ -1,4 +1,5 @@
 ﻿using HouseRenting.Services.Data.Interfaces;
+using HouseRentingSystem.Services.Data.Models.House;
 using HouseRentingSystem.Web.Infrastructure.Extensions;
 using HouseRentingSystem.Web.ViewModels.House;
 using Microsoft.AspNetCore.Authorization;
@@ -12,17 +13,24 @@ namespace HouseRentingSystem.Web.Controllers
     {
        private readonly ICategoryService _categoryService;
         private readonly IAgentService agentService;
+        private readonly IHouseService houseService;
 
-        public HouseController(ICategoryService categoryService, IAgentService agentService)
+        public HouseController(ICategoryService categoryService, IAgentService agentService, IHouseService houseService)
         {
             _categoryService = categoryService;
             this.agentService = agentService;
+            this.houseService = houseService;
         }
-
+        [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery]AllHousesQueryModel queryModel)
         {
-            return View();
+            AllHouseFilteredAndPagedServiceModel serviceModel = await houseService.AllAsync(queryModel);
+            queryModel.Houses = serviceModel.Houses;
+            queryModel.TotalHouses = serviceModel.TotalHousesCount;
+            queryModel.Categories = await this._categoryService.AllCategoryNamesAsync();
+
+            return this.View(queryModel);
         }
 
         [HttpGet]
@@ -43,5 +51,42 @@ namespace HouseRentingSystem.Web.Controllers
             return View(model);
 
         }
+        [HttpPost]
+        public async Task<IActionResult> Add(HouseFormModel model)
+        {
+            bool isAgent = await this.agentService.AgentexistByUserId(this.User.GetId()!);
+            if (!isAgent)
+            {
+                this.TempData[ErrorMessage] = "Ypu must be an agent!";
+                return RedirectToAction(nameof(AgentController.Become), "Agent");
+            }
+           
+            bool ctaegoryExist = await this._categoryService.ExistByIdAsync(model.CategoryId);
+            if (!ctaegoryExist)
+            {
+                this.ModelState.AddModelError(nameof(model.CategoryId), "Selected category does not exist");
+               
+            }
+            if (!this.ModelState.IsValid)
+            {
+                model.Categories = await this._categoryService.AllCategoriesAsync();
+                return View(model);
+            }
+
+            try
+            {
+                string? agentId = await agentService.GetAgentIdByuserIdAsync(this.User.GetId()!);
+               await this.houseService.CreateAsync(model, agentId!);
+            }
+            catch (Exception )
+            {
+
+                this.ModelState.AddModelError(string.Empty, "Unexpected error occured while you try to add your new house!");
+                model.Categories = await this._categoryService.AllCategoriesAsync();
+                return View(model);
+            }
+            return this.RedirectToAction(nameof(HouseController.All), "House");
+        }
+
     }
 }
