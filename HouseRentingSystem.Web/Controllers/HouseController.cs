@@ -54,15 +54,99 @@ namespace HouseRentingSystem.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
+             bool houseExist = await this.houseService.ExistById(id);
+            if (!houseExist) 
+            {
+                TempData[ErrorMessage] = "House does not exist";
+                return RedirectToAction(nameof(HouseController.All), "House");
+            }
+            HouseDetailsViewModel houseDetailsViewModel=await this.houseService.GetDetailsByIdAsync(id);
             
-            HouseDetailsViewModel? houseDetailsViewModel=await this.houseService.GetDetailsByIdAsync(id);
-            if (houseDetailsViewModel==null)
+
+            return View(houseDetailsViewModel);
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+
+            bool houseExist = await this.houseService.ExistById(id);
+            if (!houseExist)
             {
                 TempData[ErrorMessage] = "House does not exist";
                 return RedirectToAction(nameof(HouseController.All), "House");
             }
 
-            return View(houseDetailsViewModel);
+            bool isAgent = await this.agentService.AgentexistByUserId(this.User.GetId()!);
+            if (!isAgent)
+            {
+                TempData[ErrorMessage] = "You must become an agent";
+                return RedirectToAction(nameof(AgentController.Become), "Agent");
+            }
+            string? agentId = await this.agentService.GetAgentIdByuserIdAsync(this.User.GetId()!);
+            bool isAgentOwner = await this.houseService.IsAgentWithIdOwnerOfHouseIdAsync(id,agentId!);
+            if (!isAgentOwner)
+            {
+                TempData[ErrorMessage] = "You must be agent owner of the house to edit!";
+                return RedirectToAction(nameof(HouseController.Mine), "House");
+            }
+            try
+            {
+                HouseFormModel model = await this.houseService.GetHouseForEditByIdAsync(id);
+                model.Categories = await this._categoryService.AllCategoriesAsync();
+
+                return View(model);
+            }
+            catch (Exception)
+            {
+                
+
+                TempData[ErrorMessage] = "Unexpected error occured while trying to edit update the house";
+                return RedirectToAction(nameof(HouseController.All), "House");
+            }
+          
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(string id,HouseFormModel houseFormModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                houseFormModel.Categories = await this._categoryService.AllCategoriesAsync();
+                return View(houseFormModel);
+            }
+            bool houseExist = await this.houseService.ExistById(id);
+            if (!houseExist)
+            {
+                TempData[ErrorMessage] = "House does not exist";
+                return RedirectToAction(nameof(HouseController.All), "House");
+            }
+
+            bool isAgent = await this.agentService.AgentexistByUserId(this.User.GetId()!);
+            if (!isAgent)
+            {
+                TempData[ErrorMessage] = "You must become an agent";
+                return RedirectToAction(nameof(AgentController.Become), "Agent");
+            }
+            string? agentId = await this.agentService.GetAgentIdByuserIdAsync(this.User.GetId()!);
+            bool isAgentOwner = await this.houseService.IsAgentWithIdOwnerOfHouseIdAsync(id, agentId!);
+            if (!isAgentOwner)
+            {
+                TempData[ErrorMessage] = "You must be agent owner of the house to edit!";
+                return RedirectToAction(nameof(HouseController.Mine), "House");
+            }
+            try
+            {
+              await  this.houseService.EditHouseByIdFormModel(id, houseFormModel);
+            }
+            catch (Exception)
+            {
+                this.ModelState.AddModelError(string.Empty, "Unexpected error occured while trying to edit update the house");
+                houseFormModel.Categories = await this._categoryService.AllCategoriesAsync();
+                return View(houseFormModel);
+            }
+            this.TempData[SuccessMessage] = "House was added successfully!";
+            return RedirectToAction("Details", "House",new {id});
 
         }
 
@@ -92,6 +176,7 @@ namespace HouseRentingSystem.Web.Controllers
             {
                 string? agentId = await agentService.GetAgentIdByuserIdAsync(this.User.GetId()!);
                await this.houseService.CreateAsync(model, agentId!);
+                this.TempData[SuccessMessage] = "House was added successfully!";
             }
             catch (Exception )
             {
