@@ -52,7 +52,9 @@ namespace HouseRenting.Services.Data
                 ThenByDescending(h => h.CreatedOn),
 
             };
-            IEnumerable<HouseAllViewModel> allHouses =await houses.Skip((queryModel.CurrentPage-1)*queryModel.HousesPerPage).
+            IEnumerable<HouseAllViewModel> allHouses =await houses.
+                Where(h => h.IsActive).
+                Skip((queryModel.CurrentPage-1)*queryModel.HousesPerPage).
                 Take(queryModel.HousesPerPage).Select(h=> new HouseAllViewModel()
                 {
                           Id=h.Id.ToString(),
@@ -92,7 +94,7 @@ namespace HouseRenting.Services.Data
 
         public async Task<IEnumerable<IndexViewModel>> LastThreeHousesAsync()
         {
-            IEnumerable<IndexViewModel> lastthreeHouses = await this.dbContext.Houses.OrderByDescending(h=>h.CreatedOn).Take(3).Select(
+            IEnumerable<IndexViewModel> lastthreeHouses = await this.dbContext.Houses.Where(h=>h.IsActive).OrderByDescending(h=>h.CreatedOn).Take(3).Select(
                 h=> new IndexViewModel
                 {
                     Id=h.Id.ToString(),
