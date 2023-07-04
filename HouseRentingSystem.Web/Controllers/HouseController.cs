@@ -39,7 +39,7 @@ namespace HouseRentingSystem.Web.Controllers
             bool isAgent = await this.agentService.AgentexistByUserId(this.User.GetId()!);
             if (!isAgent)
             {
-                TempData[ErrorMessage] = "Ypu must be an agent!";
+                TempData[ErrorMessage] = "You must be an agent!";
                 return RedirectToAction(nameof(AgentController.Become), "Agent");
             }
             HouseFormModel model = new HouseFormModel()
@@ -51,6 +51,21 @@ namespace HouseRentingSystem.Web.Controllers
             return View(model);
 
         }
+        [HttpGet]
+        public async Task<IActionResult> Details(string id)
+        {
+            
+            HouseDetailsViewModel? houseDetailsViewModel=await this.houseService.GetDetailsByIdAsync(id);
+            if (houseDetailsViewModel==null)
+            {
+                TempData[ErrorMessage] = "House does not exist";
+                return RedirectToAction(nameof(HouseController.All), "House");
+            }
+
+            return View(houseDetailsViewModel);
+
+        }
+
         [HttpPost]
         public async Task<IActionResult> Add(HouseFormModel model)
         {
