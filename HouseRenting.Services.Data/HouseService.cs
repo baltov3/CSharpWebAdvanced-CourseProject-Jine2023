@@ -6,6 +6,7 @@ using HouseRentingSystem.Web.ViewModels.Home;
 using HouseRentingSystem.Web.ViewModels.House;
 using HouseRentingSystem.Web.ViewModels.House.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,6 +72,37 @@ namespace HouseRenting.Services.Data
                 TotalHousesCount = totalHouses,
                 Houses = allHouses
             };
+        }
+
+        public async Task<IEnumerable<HouseAllViewModel>> AllByAgentIdAsync(string agentId)
+        {
+            IEnumerable<HouseAllViewModel> allAgentHouses = await this.dbContext.Houses.Where(a => a.AgentId.ToString() == agentId).
+                Select(h => new HouseAllViewModel()
+                {
+                    Id = h.Id.ToString(),
+                    Title = h.Title,
+                    Address = h.Address,
+                    ImageUrl = h.ImageUrl,
+                    PricePerMonth = h.PricePerMonth,
+                    IsRented=h.RenterId.HasValue
+                }).ToArrayAsync();
+            return allAgentHouses;
+        }
+
+        public async Task<IEnumerable<HouseAllViewModel>> AllByUserIdAsync(string userId)
+        {
+            IEnumerable<HouseAllViewModel> allUserHouses = await this.dbContext.Houses
+                .Where(a =>a.RenterId.HasValue&&a.RenterId.ToString() == userId).
+                Select(h => new HouseAllViewModel()
+                {
+                    Id = h.Id.ToString(),
+                    Title = h.Title,
+                    Address = h.Address,
+                    ImageUrl = h.ImageUrl,
+                    PricePerMonth = h.PricePerMonth,
+                    IsRented = h.RenterId.HasValue
+                }).ToArrayAsync();
+            return allUserHouses;
         }
 
         public async Task CreateAsync(HouseFormModel model, string agentId)

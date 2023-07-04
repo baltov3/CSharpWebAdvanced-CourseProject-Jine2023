@@ -87,6 +87,23 @@ namespace HouseRentingSystem.Web.Controllers
             }
             return this.RedirectToAction(nameof(HouseController.All), "House");
         }
+        [HttpGet]
+        public async Task<IActionResult> Mine( )
+        {
+            List<HouseAllViewModel> houseAllViewModels = new List   <HouseAllViewModel>();
+            bool isAgent = await this.agentService.AgentexistByUserId(this.User.GetId()!);
+            string userId = User.GetId();
+            if (isAgent)
+            {
+                string? agentId = await this.agentService.GetAgentIdByuserIdAsync(userId);
+                houseAllViewModels.AddRange(await this.houseService.AllByAgentIdAsync(agentId!));
+            }
+            else
+            {
+                houseAllViewModels.AddRange(await this.houseService.AllByUserIdAsync(userId!));
+            }
+            return View(houseAllViewModels);
+        }
 
     }
 }
