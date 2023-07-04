@@ -15,7 +15,7 @@ namespace HouseRentingSystem.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<House> builder)
         {
-            builder.Property(h => h.CreatedOn).HasDefaultValue(DateTime.UtcNow);   
+            builder.Property(h => h.CreatedOn).HasDefaultValueSql("GETDATE()");   
 
            builder.
                 HasOne(h=>h.Category).WithMany(c=>c.Houses)

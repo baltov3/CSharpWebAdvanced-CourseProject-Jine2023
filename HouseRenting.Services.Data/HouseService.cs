@@ -44,8 +44,8 @@ namespace HouseRenting.Services.Data
             }
             houses = queryModel.HouseSorting switch
             {
-                HouseSorting.Newest => houses.OrderBy(h=>h.CreatedOn),
-                HouseSorting.Oldest => houses.OrderByDescending(h => h.CreatedOn),
+                HouseSorting.Newest => houses.OrderByDescending(h=>h.CreatedOn),
+                HouseSorting.Oldest => houses.OrderBy(h => h.CreatedOn),
                 HouseSorting.PriceDescending => houses.OrderByDescending(h => h.PricePerMonth),
                 HouseSorting.PriceAscending => houses.OrderBy(h => h.PricePerMonth),
                _ => houses.OrderBy(h=>h.RenterId!=null).
