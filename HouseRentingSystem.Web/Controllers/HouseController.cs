@@ -158,7 +158,7 @@ namespace HouseRentingSystem.Web.Controllers
                 .ExistById(id);
             if (!houseExists)
             {
-                this.TempData[ErrorMessage] = "House with the provided id does not exist!";
+                TempData[ErrorMessage] = "House does not exist";
 
                 return this.RedirectToAction("All", "House");
             }
@@ -290,6 +290,49 @@ namespace HouseRentingSystem.Web.Controllers
                 houseAllViewModels.AddRange(await this.houseService.AllByUserIdAsync(userId!));
             }
             return View(houseAllViewModels);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Rent(string id)
+        {
+            bool houseExists = await this.houseService
+                .ExistById(id);
+            if (!houseExists)
+            {
+                this.TempData[ErrorMessage] = "House with the provided id does not exist!";
+
+                return this.RedirectToAction("All", "House");
+            }
+            bool isRented = await this.houseService.IsRentedByIdAsync(id);
+            if (isRented)
+            {
+                this.TempData[ErrorMessage] = "House ia already rented!";
+
+                return this.RedirectToAction("All", "House");
+            }
+
+            bool isAgent = await this.agentService.AgentexistByUserId(this.User.GetId()!);
+            if (isAgent)
+            {
+                this.TempData[ErrorMessage] = "Agent can not rent houses!";
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+            try
+            {
+                await this.houseService.RentHouseAsync(id, this.User.GetId());
+            }
+            catch (Exception)
+            {
+
+                this.GeneralError();
+            }
+            return this.RedirectToAction(nameof(HouseController.Mine), "House");
+        }
+        private IActionResult GeneralError()
+        {
+            this.TempData[ErrorMessage] =
+                "Unexpected error occurred! Please try again later or contact administrator";
+
+            return this.RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
     }

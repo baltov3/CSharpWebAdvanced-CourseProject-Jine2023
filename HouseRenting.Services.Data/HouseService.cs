@@ -235,5 +235,21 @@ namespace HouseRenting.Services.Data
                 }).ToArrayAsync();
             return lastthreeHouses;
         }
+
+        public async Task<bool> IsRentedByIdAsync(string houseId)
+        {
+            House house = await this.dbContext.Houses.
+                 FirstAsync(h => h.Id.ToString() == houseId);
+            return house.RenterId.HasValue;
+        }
+
+        public async Task RentHouseAsync(string houseId, string userId)
+        {
+            House house = await this.dbContext.Houses.
+                 FirstAsync(h => h.Id.ToString() == houseId);
+            house.RenterId=Guid.Parse(userId);
+
+            await this.dbContext.SaveChangesAsync();
+        }
     }
 }
