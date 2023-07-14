@@ -247,6 +247,7 @@ namespace HouseRenting.Services.Data
         {
             House house = await this.dbContext.Houses.
                  FirstAsync(h => h.Id.ToString() == houseId);
+
             house.RenterId=Guid.Parse(userId);
 
             await this.dbContext.SaveChangesAsync();
@@ -263,7 +264,9 @@ namespace HouseRenting.Services.Data
         {
             House house = await this.dbContext.Houses.
                  FirstAsync(h => h.Id.ToString() == houseId);
+
             house.RenterId = null;
+
             await this.dbContext.SaveChangesAsync();
 
         }
