@@ -3,9 +3,11 @@
 @using HouseRenting.Services.Data.Interfaces;
 @using HouseRentingSystem.Web.Infrastructure.Extensions;
 @inject IAgentService AgentService
+@inject IHouseService HouseService
 @{
-    bool isAgent = await this.AgentService.AgentexistByUserId(this.User.GetId());
-    bool isAgentOwnerOfTheHouse = await this.AgentService.HasHouseWithIdAsync(this.User.GetId(),Model.Id);
+    bool isAgent = await this.AgentService.AgentexistByUserId(this.User.GetId()!);
+    bool isHouseRentedByUser = await this.AgentService.AgentexistByUserId(this.User.GetId()!);
+    bool isAgentOwnerOfTheHouse = await this.HouseService.IsRentedByUserWithIdAsync(Model.Id, this.User.GetId()!);
 }
 <div class="col-md-4">
     <div class="card mb-3">
@@ -37,17 +39,24 @@
                 <p></p>
                 @if (!Model.IsRented)
                 {
-                    <form class="input-group-sm" asp-controller="House"
+                    @if (!isAgent)
+                    {
+                        <form class="input-group-sm" asp-controller="House"
                   asp-action="Rent" asp-route-id="@Model.Id" method="post">
-                        <input class="btn btn-primary" type="submit" value="Rent" />
-                    </form>
+                            <input class="btn btn-primary" type="submit" value="Rent" />
+                        </form>
+                    }
+                   
                 }
                 else
                 {
-                    <form asp-controller="House" asp-action="Leave"
+                    @if (!isAgent&&isHouseRentedByUser)
+                    {
+                        <form asp-controller="House" asp-action="Leave"
                   asp-route-id="@Model.Id" method="post">
-                        <input class="btn btn-primary" type="submit" value="Leave" />
-                    </form>
+                            <input class="btn btn-primary" type="submit" value="Leave" />
+                        </form>
+                    }
                 }
             }
         </div>
