@@ -128,6 +128,7 @@ namespace HouseRenting.Services.Data
 
         public async Task DeleteHouseByIdAsync(string houseId)
         {
+           
             House houseToDelete = await this.dbContext
                 .Houses
                 .Where(h => h.IsActive)
@@ -205,14 +206,16 @@ namespace HouseRenting.Services.Data
 
         public async Task<HousePreDeleteDetailsViewModel> GetHouseForDeleteDetailsByIdAsync(string houseId)
         {
-            House house = await this.dbContext.Houses.
-               Where(h => h.IsActive)
-               .FirstAsync(h => h.Id.ToString() == houseId);
-            return new HousePreDeleteDetailsViewModel()
+
+            House house = await this.dbContext
+                .Houses
+                .Where(h => h.IsActive)
+                .FirstAsync(h => h.Id.ToString() == houseId);
+
+            return new HousePreDeleteDetailsViewModel
             {
-             
                 Title = house.Title,
-                Address= house.Address,
+                Address = house.Address,
                 ImageUrl = house.ImageUrl
             };
         }

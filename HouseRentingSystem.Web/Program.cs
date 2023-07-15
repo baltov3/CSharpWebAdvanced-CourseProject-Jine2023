@@ -11,6 +11,7 @@ namespace HouseRentingSystem.Web
     using HouseRenting.Services.Data.Interfaces;
     using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
     using HouseRentingSystem.Web.Infrastructure.ModelBinders;
+    using Microsoft.AspNetCore.Mvc;
 
     public class Program
     {
@@ -37,7 +38,10 @@ namespace HouseRentingSystem.Web
 
             builder.Services.AddApplicationServices(typeof(IHouseService));
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews().AddMvcOptions(options =>
+            {
+                options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+            });
               
 
          

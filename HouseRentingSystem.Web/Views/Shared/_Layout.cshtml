@@ -1,4 +1,10 @@
 ﻿@using static HouseRentingSystem.Coomon.GeneralApplicationConstants;
+@using HouseRenting.Services.Data.Interfaces;
+@using HouseRentingSystem.Web.Infrastructure.Extensions;
+@inject IAgentService AgentService
+@{
+    bool isAgent = await this.AgentService.AgentexistByUserId(this.User.GetId());
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,9 +38,13 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="House" asp-action="Mine">My Houses</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="House" asp-action="Add">Add House</a>
-                            </li>
+                            @if (isAgent)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="House" asp-action="Add">Add House</a>
+                                </li>
+                            }
+                            
                         }
                        
                     </ul>

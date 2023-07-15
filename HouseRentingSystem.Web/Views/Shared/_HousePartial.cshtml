@@ -1,4 +1,12 @@
 ﻿@model HouseAllViewModel
+
+@using HouseRenting.Services.Data.Interfaces;
+@using HouseRentingSystem.Web.Infrastructure.Extensions;
+@inject IAgentService AgentService
+@{
+    bool isAgent = await this.AgentService.AgentexistByUserId(this.User.GetId());
+    bool isAgentOwnerOfTheHouse = await this.AgentService.HasHouseWithIdAsync(this.User.GetId(),Model.Id);
+}
 <div class="col-md-4">
     <div class="card mb-3">
         <img class="card-img-top" src="@Model.ImageUrl" alt="House Image">
@@ -18,10 +26,14 @@
                class="btn btn-success">Details</a>
             @if (this.User.Identity?.IsAuthenticated ?? false)
             {
-                <a asp-controller="House" asp-action="Edit" asp-route-id="@Model.Id"
-                   class="btn btn-warning">Edit</a>
-                <a asp-controller="House" asp-action="Delete" asp-routeid="@Model.Id"
-                   class="btn btn-danger">Delete</a>
+                if (isAgent&&isAgentOwnerOfTheHouse)
+                {
+                    <a asp-controller="House" asp-action="Edit" asp-route-id="@Model.Id"
+                       class="btn btn-warning">Edit</a>
+                    <a asp-controller="House" asp-action="Delete" asp-routeid="@Model.Id"
+                       class="btn btn-danger">Delete</a>
+                }
+                
                 <p></p>
                 @if (!Model.IsRented)
                 {

@@ -16,5 +16,7 @@ namespace HouseRenting.Services.Data.Interfaces
         Task Create(string userId, BecomeAgentFormModel model);
         Task<string?> GetAgentIdByuserIdAsync(string userId);
 
+        Task<bool> HasHouseWithIdAsync(string agentId, string houseId);
+
     }
 }
