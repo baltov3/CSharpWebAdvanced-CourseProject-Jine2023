@@ -1,6 +1,7 @@
 ﻿using HouseRenting.Services.Data.Interfaces;
 using HouseRentingSystem.Data.Models;
 using HouseRentingSystem.Services.Data.Models.House;
+using HouseRentingSystem.Services.Data.Models.Statistics;
 using HouseRentingSystem.Web.Data;
 using HouseRentingSystem.Web.ViewModels.Agent;
 using HouseRentingSystem.Web.ViewModels.Home;
@@ -269,6 +270,15 @@ namespace HouseRenting.Services.Data
 
             await this.dbContext.SaveChangesAsync();
 
+        }
+
+        public async Task<StatisticsServiceModel> GetStatisticsAsync()
+        {
+            return new StatisticsServiceModel
+            {
+                TotalHouses = await this.dbContext.Houses.CountAsync(),
+                TotalRents = await this.dbContext.Houses.Where(h => h.RenterId.HasValue).CountAsync(),
+            };
         }
     }
 }
