@@ -148,19 +148,16 @@ namespace HouseRentingSystem.Web.Controllers
             this.TempData[SuccessMessage] = "House was added successfully!";
             return RedirectToAction("Details", "House",new {id});
 
-        }
-
-        
-        [HttpGet]
+        }      
+        [HttpGet]     
         public async Task<IActionResult> Delete(string id)
         {
-            bool houseExists = await this.houseService
-                .ExistById(id);
-            if (!houseExists)
+            bool houseExist = await this.houseService.ExistById(id);
+            if (!houseExist)
             {
                 TempData[ErrorMessage] = "House does not exist";
 
-                return this.RedirectToAction("All", "House");
+                 return this.RedirectToAction("All", "House");
             }
 
             bool isUserAgent = await this.agentService
